@@ -1,0 +1,31 @@
+NET "CLK" LOC = C9;
+NET "DIN[0]" LOC = L13;
+NET "DIN[1]" LOC = L14;
+NET "DIN[2]" LOC = H18;
+NET "DIN[3]" LOC = N17;
+NET "FULL" LOC = A8;
+NET "EMPTY" LOC = G9;
+NET "PARKFREE[3]" LOC = E6;
+NET "PARKFREE[2]" LOC = D6;
+NET "PARKFREE[1]" LOC = C3;
+NET "PARKFREE[0]" LOC = D4;
+NET "WE" LOC = V4;
+
+############  "BTN_EAST"  LOC = "H13"
+############  "BTN_NORTH" LOC = "V4"
+############  "BTN_SOUTH" LOC = "K17"
+############  "BTN_WEST"  LOC = "D18"
+#
+##########  "LED<7>" LOC = "A8"
+##########  "LED<6>" LOC = "G9"
+##########  "LED<5>" LOC = "A7"
+##########  "LED<4>" LOC = "D13"
+##########  "LED<3>" LOC = "E6"
+##########  "LED<2>" LOC = "D6"
+##########  "LED<1>" LOC = "C3"
+##########  "LED<0>" LOC = "D4”
+#
+###########  "SW<0>" LOC = "L13"
+###########  "SW<1>" LOC = "L14"
+###########  "SW<2>" LOC = "H18"
+###########  "SW<3>" LOC = "N17"

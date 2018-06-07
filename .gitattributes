@@ -1,0 +1,15 @@
+* text=auto
+
+*.vhd text eol=crlf
+*.ucf text eol=crlf
+*.prj text eol=crlf
+*.gise text eol=crlf
+isim.log text eol=crlf
+fuse.log text eol=crlf
+*.cmd text eol=crlf
+*.ini text eol=crlf
+*.tcl text eol=crlf
+
+
+*.exe binary
+*.wdb binary
