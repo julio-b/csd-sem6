@@ -14,8 +14,7 @@ ARCHITECTURE behavior OF Gate_System_bench IS
          clk : IN  std_logic;
          reset : IN std_logic;
          sensor : IN  unsigned(1 downto 0);
-         direction : OUT  signed(1 downto 0);
-         ready : OUT  std_logic
+         direction : OUT  signed(1 downto 0)
         );
     END COMPONENT;
     
@@ -27,8 +26,6 @@ ARCHITECTURE behavior OF Gate_System_bench IS
 
  	--Outputs
    signal direction : signed(1 downto 0);
-   signal ready : std_logic;
-
    -- Clock period definitions
    constant clk_period : time := 10 ns;
  
@@ -39,8 +36,7 @@ BEGIN
           clk => clk,
 			 reset => reset,
           sensor => sensor,
-          direction => direction,
-          ready => ready
+          direction => direction
         );
 
    -- Clock process definitions

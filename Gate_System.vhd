@@ -6,8 +6,7 @@ entity Gate_System is
     Port ( clk : in  std_logic;
            reset : in std_logic;
            sensor : in  unsigned(1 downto 0);
-           direction : out  signed(1 downto 0);
-           ready : out  std_logic);
+           direction : out  signed(1 downto 0));
 end Gate_System;
 
 architecture Behavioral of Gate_System is
@@ -87,17 +86,14 @@ begin
 
 	output_logic : process(current_state, sensor) is
 	begin
-			ready <= '0';
 			direction <= "00";
 		case current_state is
 		when s3 =>
 			if sensor = "00" then
-				ready <= '1';
 				direction <= "01";
 			end if;
 		when s_3 =>
 			if sensor = "00" then
-				ready <= '1';
 				direction <= "11";
 			end if;
 		when others =>
