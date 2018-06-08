@@ -13,9 +13,6 @@ Port (
 		CLK : in  std_logic;
       WE : in  std_logic;		
 		A_dir, B_dir : in signed(1 downto 0);
---		AnB : signed(3 downto 0);
---		PARKTOTAL: in unsigned(3 downto 0);
---		PARK_CNT: unsigned(3 downto 0);
       DIN : in  unsigned(3 downto 0);
       FULL : out  std_logic;
       EMPTY : out  std_logic;
@@ -40,7 +37,6 @@ PARKFREE <= PARKTOTAL - PARK_CNT;
 count : process(CLK, AnB, WE ) is
 	begin
 		if WE = '1' then
-		--	PARKTOTAL <= DIN;  --TODO: fix latch
 			PARK_CNT <= (others => '0');
 		elsif rising_edge(CLK) then
 			PARK_CNT <= unsigned(signed(std_logic_vector(PARK_CNT)) + AnB);

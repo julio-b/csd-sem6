@@ -23,9 +23,6 @@ architecture Behavioral of Counter is
 
 signal A, B : unsigned(1 downto 0);
 signal A_middle_dir, B_middle_dir :signed(1 downto 0);
---signal Middle_Parktotal : unsigned(3 downto 0);
---signal PARKTOTAL: unsigned(3 downto 0); --MA? 15
---signal PARK_CNT: unsigned(3 downto 0); --MA? 15
 
 begin
 
@@ -65,30 +62,7 @@ begin
 				 B_dir => B_middle_dir
 				 );
 				 
---	Register_DIN:
---	entity work.Register_DIN (behavioral)
---	port map (
---				CLK => CLK,
---				WE => WE,
---				DIN => DIN,
---	         PARKTOTAL =>Middle_Parktotal
---				);
---	
---	AnB <= resize(A_dir, AnB'length) + resize(B_dir, AnB'length);
---	
---	PARKFREE <= PARKTOTAL - PARK_CNT;
---	EMPTY <= '1' when PARK_CNT = 0 else '0' ;
---	FULL <= '1' when PARK_CNT = PARKTOTAL else '0';
---
---count : process(CLK, AnB, WE, DIN) is
---	begin
---		if WE = '1' then
---			PARKTOTAL <= DIN;  --TODO: fix latch
---			PARK_CNT <= (others => '0');
---		elsif rising_edge(CLK) then
---			PARK_CNT <= unsigned(signed(std_logic_vector(PARK_CNT)) + AnB);
---		end if;
---end process count;
+
 
  
 end Behavioral;
