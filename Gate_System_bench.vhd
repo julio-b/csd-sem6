@@ -50,15 +50,30 @@ BEGIN
  
 
    -- Stimulus process
+
    stim_proc: process
+		procedure sensor_value(constant q : unsigned(1 downto 0) := (others => '0')) is
+		begin
+			sensor <= q;
+			wait for clk_period;
+		end procedure;
+		procedure Sequence(constant q0, q1, q2, q3, q4, q5, q6, q7, q8, q9 : unsigned(1 downto 0) := (others => '0')) is
+		begin
+			sensor_value(q0); sensor_value(q1); sensor_value(q2); sensor_value(q3); sensor_value(q4);
+			sensor_value(q5); sensor_value(q6); sensor_value(q7); sensor_value(q8); sensor_value(q9);
+		end procedure;
    begin		
-      -- hold reset state for 100 ns.
-      wait for 100 ns;	
-
-      wait for clk_period*10;
-
-      -- insert stimulus here 
-
+		reset <= '1';
+		sensor <= "00";
+		wait for clk_period;
+		reset <= '0';
+		wait for clk_period;
+		Sequence("00", "01", "11", "10", "11", "11", "10", "11", "10", "00");
+		Sequence("00", "10", "11", "10", "11", "01", "01", "00", "00", "00");
+		Sequence("00", "01", "10", "10", "10", "00", "10", "11", "01", "00");
+		Sequence("00", "11", "11", "01", "11", "00", "01", "11", "10", "00");
+		--Sequence("00", "00", "00", "00", "00", "00", "00", "00", "00", "00");
+		--Sequence("00", "00", "00", "00", "00", "00", "00", "00", "00", "00");
       wait;
    end process;
 

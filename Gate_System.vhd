@@ -111,7 +111,7 @@ next_state_logic : process(current_state, sensor) is
 
 	output_logic : process(current_state, sensor) is
 	begin
-			direction <= "00";
+		direction <= "00";
 		case current_state is
 		when s3 =>
 			if sensor = "00" then
