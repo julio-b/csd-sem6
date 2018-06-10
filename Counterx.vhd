@@ -33,36 +33,30 @@ signal PARKTOTAL: unsigned(3 downto 0); --MA? 15
 signal PARK_CNT: unsigned(3 downto 0); --MA? 15
 
 -------------------Procedure------------------------|
-procedure Check_signals (
-								
-								signal DIN : in  unsigned(3 downto 0);
-								signal PARKTOTAL: in unsigned(3 downto 0);
-								signal PARK_CNT: in unsigned(3 downto 0)								
-                       	)is
-begin 							
-			assert (DIN<16) ;		
-			report "DIN > 15" severity error ;
-						
-			if (DIN = 0)  then		
-			  report "DIN=0" severity note;
-			end if; 
-						
-			assert(PARKTOTAL <= DIN) ;
-			report "PARKTOTAL <= DIN" severity note;			
+procedure Check_signals(signal DIN, PARKTOTAL, PARK_CNT: in  unsigned(3 downto 0))is
+begin
+	assert (DIN<16);
+	report "DIN > 15" severity error ;
+	if (DIN = 0)  then
+		report "DIN=0" severity note;
+	end if;
+	assert(PARKTOTAL <= DIN) ;
+	report "PARKTOTAL <= DIN" severity note;
 end;
---------------------BEGIN---------------------------|							
+
+--------------------BEGIN---------------------------|
 begin
 	sum_N: process(N_A_dir)
-variable tSUM:signed(3 downto 0);
+		variable tSUM:signed(3 downto 0);
 	begin
 		tSUM := (others => '0');
 		for i in 0 to N-1 loop
-			tSUM := (tSUM) + (resize(N_A_dir(i),tSUM'length));			
+			tSUM := (tSUM) + (resize(N_A_dir(i),tSUM'length));
 		end loop;
 	SUM_N_i <= tSUM;
 	end process sum_N;
 
-   --------------Count Process---------------|
+	--------------Count Process---------------|
 	count : process(CLK, SUM_N_i, WE ) is
 	begin
 		if WE = '1' then
@@ -72,15 +66,15 @@ variable tSUM:signed(3 downto 0);
 		end if;
 	end process count;
 
-   ----------------Register-----------------|
-	The_smallest_process_ever :process (CLK) is	
-	begin 
-		if rising_edge (CLK) then 
-			If WE = '1' then 
-				PARKTOTAL <= DIN ; 
+	----------------Register-----------------|
+	The_smallest_process_ever :process (CLK) is
+	begin
+		if rising_edge (CLK) then
+			If WE = '1' then
+				PARKTOTAL <= DIN ;
 			end if;
-		end if;		
-	end process	The_smallest_process_ever ;
+		end if;
+	end process The_smallest_process_ever ;
 
 	Check_signals (  DIN , PARKTOTAL, PARK_CNT); -------procedure---------|
 	PARKFREE <= PARKTOTAL - PARK_CNT;
