@@ -15,7 +15,7 @@ use array_for_N_A_dir_signals.all;
 
 
 entity Counter is 
-generic ( N : natural:= 2 );
+generic ( N : natural:= 10 );
 Port ( 
 	CLK : in  std_logic;
 	WE : in  std_logic;
