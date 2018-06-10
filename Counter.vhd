@@ -15,7 +15,7 @@ use array_for_N_A_dir_signals.all;
 
 
 entity Counter is 
-generic ( N : natural:= 10 );
+generic ( N : natural:= 5 );
 Port ( 
 	CLK : in  std_logic;
 	WE : in  std_logic;
@@ -44,8 +44,10 @@ begin
 		) ;
 	end generate N_Gates;
 
+	
 	Counterx:
 	entity work.Counterx(Behavioral)
+	generic map ( N=>N ) 
 	port map (
 		CLK => CLK,
 		WE => WE ,
