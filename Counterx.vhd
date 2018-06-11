@@ -9,7 +9,7 @@ generic ( N : natural:= 2 );
 Port ( 
 	CLK : in  std_logic;
 	WE : in  std_logic;
-	DIRECTIONS : direction_vector(0 to N-1);
+	DIRECTIONS : in direction_vector(0 to N-1);
 	DIN : in  unsigned(3 downto 0);
 	FULL : out  std_logic;
 	EMPTY : out  std_logic;
