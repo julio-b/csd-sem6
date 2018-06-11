@@ -20,68 +20,70 @@ Port (
 end Counterx;
 
 architecture Behavioral of Counterx is
--------------------Declaration of Signals------------------------|
+
 signal PARKTOTAL: unsigned(3 downto 0); --MA? 15
 signal PARK_CNT: unsigned(3 downto 0); --MA? 15
 signal overflow_m, underflow_m : std_logic;
 
--------------------Procedure------------------------|
-procedure Check_signals(signal DIN, PARKTOTAL, PARK_CNT: in  unsigned(3 downto 0))is
+impure function "+" (l : unsigned(3 downto 0); r : signed(3 downto 0)) return unsigned is
+	variable result : unsigned(3 downto 0);
+	variable fixing : unsigned(3 downto 0);
 begin
-	assert (DIN<16);
-	report "DIN > 15" severity error ;
-	if (DIN = 0)  then
-		report "DIN=0" severity note;
+	result := unsigned(signed(std_logic_vector(l)) + r);
+	fixing := PARKTOTAL + 1;
+	if result > PARKTOTAL then --result in (PARKTOTAL..2^4]
+		if  r<0 then
+			result := result + fixing;
+		else
+			result := result - fixing;
+		end if;
 	end if;
-	assert(PARKTOTAL <= DIN) ;
-	report "PARKTOTAL <= DIN" severity note;
-end;
+	return result;
+end function "+";
 
---------------------BEGIN---------------------------|
 begin
-	--------------Count Process---------------|
+
 	count : process(CLK, WE) is
 		variable PARK_CNT_NEW : unsigned(3 downto 0);
+		variable overflow_condition, underflow_condition: boolean;
 	begin
 		if WE = '1' then
 			PARK_CNT <= (others => '0');
 			overflow_m <= '0';
 			underflow_m <= '0';
 		elsif rising_edge(CLK) then
-			PARK_CNT_NEW := unsigned(signed(std_logic_vector(PARK_CNT)) + SUM(DIRECTIONS));
-			if PARK_CNT_NEW > PARKTOTAL then
-				if  SUM(DIRECTIONS)<0 then
-					PARK_CNT_NEW := PARK_CNT_NEW + PARKTOTAL + 1;
-				else
-					PARK_CNT_NEW := PARK_CNT_NEW - PARKTOTAL - 1;
-				end if;
-			end if;
+			PARK_CNT_NEW := PARK_CNT + SUM(DIRECTIONS);
 			
-			if overflow_m='1' and SUM(DIRECTIONS)<0 and PARK_CNT_NEW>PARK_CNT then
+			overflow_condition := SUM(DIRECTIONS) > 0 and PARK_CNT_NEW < PARK_CNT;
+			underflow_condition := SUM(DIRECTIONS) < 0 and PARK_CNT_NEW > PARK_CNT;
+			
+			if overflow_m='1' and underflow_condition then
 				overflow_m <= '0';
-			elsif underflow_m='1' and SUM(DIRECTIONS)>0 and PARK_CNT_NEW<PARK_CNT then
+			elsif underflow_m='1' and overflow_condition then
 				underflow_m <= '0';
-			elsif SUM(DIRECTIONS) > 0 and PARK_CNT_NEW < PARK_CNT then
+			elsif overflow_condition then
 				overflow_m <= '1';
-			elsif SUM(DIRECTIONS) < 0 and PARK_CNT_NEW > PARK_CNT then
+				report "Vehicle enters a full parking" severity warning;
+			elsif underflow_condition then
 				underflow_m <= '1';
+				report "Vehicle leaves from an empty parking" severity warning;
 			end if;
 			
 			PARK_CNT <= PARK_CNT_NEW;
 		end if;
 	end process count;
 
-	----------------Register-----------------|
-	The_smallest_process_ever :process (CLK) is
+	PARKTOTAL_register :process (CLK) is
 	begin
 		if rising_edge (CLK) then
 			If WE = '1' then
 				PARKTOTAL <= DIN ;
+				assert (DIN<16) report "DIN > 15" severity warning;
+				assert (DIN/=0) report "DIN == 0" severity error;
 			end if;
 		end if;
-	end process The_smallest_process_ever ;
+	end process PARKTOTAL_register ;
 
-	Check_signals (  DIN , PARKTOTAL, PARK_CNT); -------procedure---------|
 	PARKFREE <= PARKTOTAL - PARK_CNT;
 	EMPTY <= '1' when PARK_CNT = 0 else '0' ;
 	FULL <= '1' when PARK_CNT = PARKTOTAL else '0';
