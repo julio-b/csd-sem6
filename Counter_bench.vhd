@@ -6,14 +6,16 @@ ENTITY Counter_bench IS
 END Counter_bench;
  
 ARCHITECTURE behavior OF Counter_bench IS 
- 
+    constant N : natural := 3; -----<<<<<<<
+
     -- Component Declaration for the Unit Under Test (UUT)
  
     COMPONENT Counter
+    GENERIC ( N : natural:= 5 );
     PORT(
          CLK : IN  std_logic;
          WE : IN  std_logic;
-         DIN : IN  unsigned(3 downto 0);
+         DIN : IN  unsigned(2*N-1 downto 0);
          FULL : OUT  std_logic;
          EMPTY : OUT  std_logic;
          PARKFREE : OUT  unsigned(3 downto 0)
@@ -24,7 +26,7 @@ ARCHITECTURE behavior OF Counter_bench IS
    --Inputs
    signal CLK : std_logic := '0';
    signal WE : std_logic := '0';
-   signal DIN : unsigned(3 downto 0) := (others => '0');
+   signal DIN : unsigned(2*N-1 downto 0) := (others => '0');
 
  	--Outputs
    signal FULL : std_logic;
@@ -37,7 +39,7 @@ ARCHITECTURE behavior OF Counter_bench IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: Counter PORT MAP (
+   uut: Counter GENERIC MAP (N=>N) PORT MAP (
           CLK => CLK,
           WE => WE,
           DIN => DIN,
@@ -58,9 +60,9 @@ BEGIN
 
    -- Stimulus process
    stim_proc: process
-		type ARGS is array (0 to 39) of unsigned(3 downto 0);
+		type ARGS is array (0 to 39) of unsigned(2*N-1 downto 0);
 		variable QQ : ARGS;
-		procedure Sequence(variable Q : ARGS := (others => "0000")) is
+		procedure Sequence(variable Q : ARGS := (others => (others => '0'))) is
 		begin
 			foreachi : for i in 0 to (Q'length - 1) loop
 				DIN <= Q(i);
@@ -69,79 +71,97 @@ BEGIN
 		end procedure;
    begin
 		--------------------------------------------
-		--Reset
-		DIN <= "0110";
-		WE <= '1';
-		wait for CLK_period*2;
-		WE <= '0';
-		wait for CLK_period*2;
-		--input sequence a&b--
-		QQ :=(
-		"00"&"00",
-		"01"&"01",
-		"11"&"11",
-		"10"&"10",
-		"00"&"00",
-		"00"&"00",
-		"01"&"01",
-		"11"&"11",
-		"10"&"10",
-		"00"&"00",
-		"01"&"01",
-		"11"&"11",
-		"10"&"10",
-		"00"&"00",
-		--"XX"&"XX",
-		--"ZZ"&"ZZ",
-		-- .
-		-- ..
-		-- ...
-		-------------
-		--default
-		others => "0000");Sequence(QQ);
-		
+--		--Reset
+--		DIN <= "0110";
+--		WE <= '1'; wait for CLK_period*2;
+--		WE <= '0'; wait for CLK_period*2;
+--		--input sequence A&B--
+--		QQ :=(
+--		"00"&"00",
+--		"01"&"01",
+--		"11"&"11",
+--		"10"&"10",
+--		"00"&"00",
+--		"00"&"00",
+--		"01"&"01",
+--		"11"&"11",
+--		"10"&"10",
+--		"00"&"00",
+--		"01"&"01",
+--		"11"&"11",
+--		"10"&"10",
+--		"00"&"00",
+--		--"XX"&"XX",
+--		--"ZZ"&"ZZ",
+--		-- .
+--		-- ..
+--		-- ...
+--		-------------
+--		--default
+--		others => (others => '0'));Sequence(QQ);
+--		
+--		DIN <= "1110";
+--		WE <= '1'; wait for CLK_period*2;
+--		WE <= '0'; wait for CLK_period*2;
+--		
+--		QQ :=(
+--		"00"&"00",   --   |  
+--		"01"&"01",   --   |  
+--		"01"&"11",   --   |  
+--		"01"&"01",   --   |  
+--		"11"&"00",   --   | +
+--		"11"&"00",   --   |  
+--		"10"&"00",   --   |  
+--		"00"&"00",   -- + |  
+--		"01"&"01",   --   |  
+--		"11"&"11",   --   |  
+--		"11"&"10",   --   |  
+--		"11"&"00",   --   | +
+--		"00"&"01",   --   |  
+--		"01"&"11",   --   |  
+--		"00"&"10",   --   |  
+--		"01"&"00",   --   | +
+--		"01"&"00",   --   |  
+--		"11"&"00",   --   |  
+--		"11"&"10",   --   |  
+--		"01"&"11",   --   |  
+--		"11"&"01",   --   |  
+--		"10"&"00",   --   | -
+--		"10"&"01",   --   |  
+--		"10"&"11",   --   |  
+--		"00"&"10",   -- + |  
+--		"00"&"00",   --   | +
+--		"01"&"01",   --   |  
+--		"11"&"11",   --   |  
+--		"10"&"10",   --   |  
+--		"00"&"00",   -- + | +
+--		others => (others => '0'));Sequence(QQ);
+--		
 		--===================================================--
 		-------------------------------------------------------
 		--===================================================--
-		
-		DIN <= "1110";
-		WE <= '1';
-		wait for CLK_period*2;
-		WE <= '0';
-		wait for CLK_period*2;
-		
+		DIN <= "000110";
+		WE <= '1'; wait for CLK_period*2;
+		WE <= '0'; wait for CLK_period*2;
+		--input sequence A&B&C--
 		QQ :=(
-		"00"&"00",   --   |  
-		"01"&"01",   --   |  
-		"01"&"11",   --   |  
-		"01"&"01",   --   |  
-		"11"&"00",   --   | +
-		"11"&"00",   --   |  
-		"10"&"00",   --   |  
-		"00"&"00",   -- + |  
-		"01"&"01",   --   |  
-		"11"&"11",   --   |  
-		"11"&"10",   --   |  
-		"11"&"00",   --   | +
-		"00"&"01",   --   |  
-		"01"&"11",   --   |  
-		"00"&"10",   --   |  
-		"01"&"00",   --   | +
-		"01"&"00",   --   |  
-		"11"&"00",   --   |  
-		"11"&"10",   --   |  
-		"01"&"11",   --   |  
-		"11"&"01",   --   |  
-		"10"&"00",   --   | -
-		"10"&"01",   --   |  
-		"10"&"11",   --   |  
-		"00"&"10",   -- + |  
-		"00"&"00",   --   | +
-		"01"&"01",   --   |  
-		"11"&"11",   --   |  
-		"10"&"10",   --   |  
-		"00"&"00",   -- + | +
-		others => "0000");Sequence(QQ);
+		"00"&"00"&"00",
+		"01"&"01"&"01",
+		"11"&"11"&"11",
+		"10"&"10"&"10",
+		"00"&"00"&"00",
+		"00"&"00"&"10",
+		"01"&"01"&"11",
+		"11"&"11"&"01",
+		"10"&"10"&"00",
+		"00"&"00"&"00",
+		"01"&"10"&"01",
+		"11"&"11"&"11",
+		"10"&"01"&"10",
+		"00"&"00"&"00",
+		--"XX"&"XX"&"XX",
+		--"ZZ"&"ZZ"&"ZZ",
+		others => (others => '0'));Sequence(QQ);
 		
 		wait;
    end process;

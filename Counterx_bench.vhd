@@ -1,20 +1,22 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
+use work.direction_vector.all;
  
 ENTITY Counterx_bench IS
 END Counterx_bench;
  
 ARCHITECTURE behavior OF Counterx_bench IS 
- 
+    constant N : natural := 2;
+
     -- Component Declaration for the Unit Under Test (UUT)
  
     COMPONENT Counterx
+    GENERIC ( N : natural:= 2 );
     PORT(
          CLK : IN  std_logic;
          WE : IN  std_logic;
-         A_dir : IN  signed(1 downto 0);
-         B_dir : IN  signed(1 downto 0);
+         DIRECTIONS : IN direction_vector(0 to N-1);
          DIN : IN  unsigned(3 downto 0);
          FULL : OUT  std_logic;
          EMPTY : OUT  std_logic;
@@ -26,8 +28,7 @@ ARCHITECTURE behavior OF Counterx_bench IS
    --Inputs
    signal CLK : std_logic := '0';
    signal WE : std_logic := '0';
-   signal A_dir : signed(1 downto 0) := (others => '0');
-   signal B_dir : signed(1 downto 0) := (others => '0');
+   signal DIRECTIONS : direction_vector(0 to N-1) := (others => (others =>'0'));
    signal DIN : unsigned(3 downto 0) := (others => '0');
 
  	--Outputs
@@ -41,11 +42,10 @@ ARCHITECTURE behavior OF Counterx_bench IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: Counterx PORT MAP (
+   uut: Counterx GENERIC MAP (N=>N) PORT MAP (
           CLK => CLK,
           WE => WE,
-          A_dir => A_dir,
-          B_dir => B_dir,
+          DIRECTIONS => DIRECTIONS,
           DIN => DIN,
           FULL => FULL,
           EMPTY => EMPTY,
@@ -69,22 +69,22 @@ BEGIN
 		WE <= '1';
 		wait for CLK_period*4;
 		WE <= '0';
-		A_dir <= "00"; B_dir <= "00"; wait for CLK_period;
-		A_dir <= "01"; B_dir <= "00"; wait for CLK_period;
-		A_dir <= "00"; B_dir <= "01"; wait for CLK_period;
-		A_dir <= "01"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "01"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "00"; B_dir <= "00"; wait for CLK_period;
-		A_dir <= "00"; B_dir <= "00"; wait for CLK_period;
-		A_dir <= "11"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "11"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "01"; B_dir <= "01"; wait for CLK_period;
-		A_dir <= "01"; B_dir <= "01"; wait for CLK_period;
-		A_dir <= "00"; B_dir <= "01"; wait for CLK_period;
-		A_dir <= "11"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "11"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "11"; B_dir <= "11"; wait for CLK_period;
-		A_dir <= "00"; B_dir <= "00"; wait for CLK_period;
+		DIRECTIONS(1) <= "00"; DIRECTIONS(0) <= "00"; wait for CLK_period;
+		DIRECTIONS(1) <= "01"; DIRECTIONS(0) <= "00"; wait for CLK_period;
+		DIRECTIONS(1) <= "00"; DIRECTIONS(0) <= "01"; wait for CLK_period;
+		DIRECTIONS(1) <= "01"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "01"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "00"; DIRECTIONS(0) <= "00"; wait for CLK_period;
+		DIRECTIONS(1) <= "00"; DIRECTIONS(0) <= "00"; wait for CLK_period;
+		DIRECTIONS(1) <= "11"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "11"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "01"; DIRECTIONS(0) <= "01"; wait for CLK_period;
+		DIRECTIONS(1) <= "01"; DIRECTIONS(0) <= "01"; wait for CLK_period;
+		DIRECTIONS(1) <= "00"; DIRECTIONS(0) <= "01"; wait for CLK_period;
+		DIRECTIONS(1) <= "11"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "11"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "11"; DIRECTIONS(0) <= "11"; wait for CLK_period;
+		DIRECTIONS(1) <= "00"; DIRECTIONS(0) <= "00"; wait for CLK_period;
 		
 		DIN <= "1110";
 		WE <= '1';
