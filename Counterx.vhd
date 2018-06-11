@@ -1,24 +1,15 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL;
-
-package array_for_N_A_dir_signals is
-  Subtype dir_signals        is signed(1 downto 0);
-  Type    array_for_N_A_dir_signals        is array (natural range <>) of dir_signals;
-end package;
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use array_for_N_A_dir_signals.all;
+use work.direction_vector.all;
 
 entity Counterx is 
-generic ( N : natural:= 10 );
+generic ( N : natural:= 2 );
 
 Port ( 
 	CLK : in  std_logic;
 	WE : in  std_logic;
-	N_A_dir: array_for_N_A_dir_signals( 0 to N-1);
+	DIRECTIONS : direction_vector(0 to N-1);
 	DIN : in  unsigned(3 downto 0);
 	FULL : out  std_logic;
 	EMPTY : out  std_logic;
@@ -28,7 +19,6 @@ end Counterx;
 
 architecture Behavioral of Counterx is
 -------------------Declaration of Signals------------------------|
-signal SUM_N_i : signed(3 downto 0);
 signal PARKTOTAL: unsigned(3 downto 0); --MA? 15
 signal PARK_CNT: unsigned(3 downto 0); --MA? 15
 
@@ -46,23 +36,13 @@ end;
 
 --------------------BEGIN---------------------------|
 begin
-	sum_N: process(N_A_dir)
-		variable tSUM:signed(3 downto 0);
-	begin
-		tSUM := (others => '0');
-		for i in 0 to N-1 loop
-			tSUM := (tSUM) + (resize(N_A_dir(i),tSUM'length));
-		end loop;
-	SUM_N_i <= tSUM;
-	end process sum_N;
-
 	--------------Count Process---------------|
-	count : process(CLK, SUM_N_i, WE ) is
+	count : process(CLK, WE) is
 	begin
 		if WE = '1' then
 			PARK_CNT <= (others => '0');
 		elsif rising_edge(CLK) then
-			PARK_CNT <= unsigned(signed(std_logic_vector(PARK_CNT)) + SUM_N_i);
+			PARK_CNT <= unsigned(signed(std_logic_vector(PARK_CNT)) + SUM(DIRECTIONS));
 		end if;
 	end process count;
 
