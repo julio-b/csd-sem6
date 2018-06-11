@@ -18,6 +18,8 @@ end Counter;
 architecture Behavioral of Counter is
 
 signal directions : direction_vector(0 to N-1);
+signal clk_led_blinking : std_logic;
+signal full_m, empty_m, overflow, underflow : std_logic;
 
 begin
 
@@ -41,10 +43,20 @@ begin
 		CLK => CLK,
 		WE => WE ,
 		DIN => DIN(3 downto 0),
-		FULL => FULL,
-		EMPTY => EMPTY,
+		FULL => full_m,
+		EMPTY => empty_m,
 		PARKFREE => PARKFREE,
+		OVERFLOW => overflow,
+		UNDERFLOW => underflow,
 		DIRECTIONS => directions
 	);
+
+	freq_div_unit:
+	entity work.freq_div(Behavioral)
+	generic map(CLK_INPUT => 50000000, CLK_OUTPUT => 25000000)
+	port map(clk_in => CLK, clk_out =>  clk_led_blinking);
+
+	FULL <= full_m when overflow='0' else clk_led_blinking;
+	EMPTY <= empty_m when underflow='0' else clk_led_blinking;
 
 end Behavioral;
