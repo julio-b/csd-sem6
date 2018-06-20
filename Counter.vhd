@@ -32,7 +32,7 @@ begin
 			sensor => DIN(2*i+1 downto 2*i),
 			direction => directions(i)
 		) ;
-	end generate Gates;
+	end generate;
 	
 	Counterx:
 	entity work.Counterx(Behavioral)
