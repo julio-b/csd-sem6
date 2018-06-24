@@ -88,8 +88,9 @@ begin
 	end process next_state_logic;
 
 
-	output_logic : process(current_state, sensor) is
+	output_logic : process(clk, current_state, sensor) is
 	begin
+		if falling_edge(clk) then
 		direction <= "00";
 		case current_state is
 		when s3 =>
@@ -103,6 +104,7 @@ begin
 		when others =>
 			null;
 		end case;
+		end if;
 	end process output_logic;
 
 end Behavioral;
