@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 use work.direction_vector.all;
 
 entity Counter is 
-generic ( N : natural:= 2 );
+generic ( N : natural:= 2; H : natural:= 2);
 Port ( 
 	CLK : in  std_logic;
 	WE : in  std_logic;
@@ -53,7 +53,7 @@ begin
 
 	freq_div_unit:
 	entity work.freq_div(Behavioral)
-	generic map(CLK_INPUT => 50000000, CLK_OUTPUT => 2)  -- 25000000)
+	generic map(CLK_INPUT => 50000000, CLK_OUTPUT => H)
 	port map(clk_in => CLK, clk_out =>  clk_led_blinking);
 
 	FULL <= full_m when overflow='0' else clk_led_blinking;

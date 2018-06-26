@@ -11,7 +11,7 @@ ARCHITECTURE behavior OF Counter_bench IS
     -- Component Declaration for the Unit Under Test (UUT)
  
     COMPONENT Counter
-    GENERIC ( N : natural:= 5 );
+    GENERIC ( N : natural:= 2; H : natural:= 2 );
     PORT(
          CLK : IN  std_logic;
          WE : IN  std_logic;
@@ -39,7 +39,7 @@ ARCHITECTURE behavior OF Counter_bench IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: Counter GENERIC MAP (N=>N) PORT MAP (
+   uut: Counter GENERIC MAP (N=>N, H=>25000000) PORT MAP (
           CLK => CLK,
           WE => WE,
           DIN => DIN,
