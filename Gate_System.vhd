@@ -42,7 +42,7 @@ begin
 				elsif sensor = "00" then
 					next_state <= s0;
 				elsif sensor = "10" then
-					next_state <= s0; -- ? or s_1
+					next_state <= s0;
 				end if;
 			when s2 =>
 				if sensor = "10" then
@@ -50,7 +50,7 @@ begin
 				elsif sensor = "01" then
 					next_state <= s1;
 				elsif sensor = "00" then
-					next_state <= s0; -- ?
+					next_state <= s0;
 				end if;
 			when s3 =>
 				if sensor = "00" then
@@ -58,7 +58,7 @@ begin
 				elsif sensor = "11" then
 					next_state <= s2;
 				elsif sensor = "01" then
-					next_state <= s0; -- ?
+					next_state <= s0;
 				end if;
 			when s_1 =>
 				if sensor = "11" then
@@ -66,7 +66,7 @@ begin
 				elsif sensor = "00" then
 					next_state <= s0;
 				elsif sensor = "01" then
-					next_state <= s0; -- ? or s1
+					next_state <= s0;
 				end if;
 			when s_2 =>
 				if sensor = "01" then
@@ -74,7 +74,7 @@ begin
 				elsif sensor = "10" then
 					next_state <= s_1;
 				elsif sensor = "00" then
-					next_state <= s0; -- ?
+					next_state <= s0;
 				end if;
 			when s_3 =>
 				if sensor = "00" then
@@ -82,7 +82,7 @@ begin
 				elsif sensor = "11" then
 					next_state <= s_2;
 				elsif sensor = "10" then
-					next_state <= s0; -- ?
+					next_state <= s0;
 				end if;
 		end case;
 	end process next_state_logic;

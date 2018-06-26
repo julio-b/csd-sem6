@@ -54,19 +54,15 @@ begin
 		elsif rising_edge(CLK) then
 			PARK_CNT_NEW := PARK_CNT + SUM(DIRECTIONS);
 			
-			overflow_condition := SUM(DIRECTIONS) > 0 and PARK_CNT_NEW < PARK_CNT;
+			overflow_condition := SUM(DIRECTIONS) > 0 and (PARK_CNT_NEW > PARKTOTAL or PARK_CNT_NEW < PARK_CNT);
 			underflow_condition := SUM(DIRECTIONS) < 0 and PARK_CNT_NEW > PARK_CNT;
 			
-			if overflow_m='1' and underflow_condition then
-				overflow_m <= '0';
-			elsif underflow_m='1' and overflow_condition then
-				underflow_m <= '0';
-			elsif overflow_condition then
+			if overflow_condition then
 				overflow_m <= '1';
-				report "Vehicle enters a full parking" severity warning;
+				report "Vehicle enters a full parking, please reset" severity warning;
 			elsif underflow_condition then
 				underflow_m <= '1';
-				report "Vehicle leaves from an empty parking" severity warning;
+				report "Vehicle leaves from an empty parking, please reset" severity warning;
 			end if;
 			
 			PARK_CNT <= PARK_CNT_NEW;
@@ -78,7 +74,6 @@ begin
 		if rising_edge (CLK) then
 			If WE = '1' then
 				PARKTOTAL <= DIN ;
-				assert (DIN<16) report "DIN > 15" severity warning;
 				assert (DIN/=0) report "DIN == 0" severity error;
 			end if;
 		end if;

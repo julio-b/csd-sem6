@@ -9,7 +9,7 @@ NET "PARKFREE[3]" LOC = E6;
 NET "PARKFREE[2]" LOC = D6;
 NET "PARKFREE[1]" LOC = C3;
 NET "PARKFREE[0]" LOC = D4;
-NET "WE" LOC = V4;
+NET "WE" LOC = D18;
 
 ############  "BTN_EAST"  LOC = "H13"
 ############  "BTN_NORTH" LOC = "V4"
